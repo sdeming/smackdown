@@ -43,7 +43,7 @@ let rec get prompt =
     let n = read_int() in
     match n >= 0 with
     | true -> n
-    | false -> raise (EntryException("Must be >= 0."))
+    | false -> raise (EntryException("Must be >= 0"))
   with 
   | Failure(s) ->
     Printf.printf "That isn't a number\nEnter an integer >= 0\n";
