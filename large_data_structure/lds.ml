@@ -56,7 +56,7 @@ let rec get prompt =
 (* main()ish *)
 let c = get "Column: " in
 let v = get "Value: " in
-let channel = open_in "data.txt" in
+let channel = open_in Sys.argv.(1) in
   Printf.printf "%f\n" (Unix.gettimeofday());
   Printf.printf "%d\n" (count channel c v);
   Printf.printf "%f\n" (Unix.gettimeofday());

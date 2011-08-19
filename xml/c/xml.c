@@ -14,6 +14,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <ctype.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -50,9 +51,7 @@ const size_t POOL_SIZE_START = 100;
 enum state_t {
     none              = 1,
     widget_list       = 2,
-    widget            = 3,
-    widget_name       = 4,
-    widget_id         = 5
+    widget            = 3
 };
 
 /**
@@ -224,18 +223,28 @@ int main(int argc, char *argv[])
             char *name = strstr(pos, NAME_START);
 
             if (id && (end > id)) {
+                /* id found, use it */
                 id += sizeof(ID_START);
                 char *endofit = (strstr(id, ID_END) - 1);
+
+                /* trim it */
                 while (isspace(*id)) ++id;
                 while (isspace(*endofit)) *endofit--=0;
+
+                /* store it */
                 strncpy(current->id, id, sizeof(current->id)-1);
             }
 
             if (name && (end > name)) {
+                /* name found, use it */
                 name += sizeof(NAME_START);
                 char *endofit = (strstr(name, NAME_END) - 1);
+
+                /* trim it */
                 while (isspace(*name)) ++name;
                 while (isspace(*endofit)) *endofit--=0;
+
+                /* store it */
                 strncpy(current->name, name, sizeof(current->name)-1);
             }
 
@@ -245,12 +254,15 @@ int main(int argc, char *argv[])
         }
     }
 
-    fprintf(stderr, "= %ld widgets. Now sorting...\n", widget_count);
+    /* sort them */
     qsort(pool, widget_count, sizeof(widget_t), compare_widgets);
+
+    /* spit em out */
     for (len=0; len<widget_count; ++len) {
         puts(pool[len].name);
     }
 
+    /* cleanse the soul */
     close(file);
     free(buffer);
     free(pool);
