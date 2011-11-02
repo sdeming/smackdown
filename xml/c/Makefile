@@ -1,4 +1,5 @@
 CFLAGS=-Wall -O2 -funroll-all-loops -funswitch-loops -ffast-math -finline-functions
+#CFLAGS=-g
 
 xml: xml.o
 	gcc $(CFLAGS) -o xml xml.o

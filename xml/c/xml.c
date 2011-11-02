@@ -26,8 +26,8 @@
 /**
  * things we can't declare as constants
  */
-#define ID_LEN   20
-#define NAME_LEN 40
+#define ID_LEN   100
+#define NAME_LEN 1000
 
 /**
  * useful constants 
@@ -149,13 +149,13 @@ int main(int argc, char *argv[])
 
             /* read chunks until we find a LIST_START */
             while (!(next = strstr(pos, LIST_START))) {
-                pos = (buffer + max_len) - sizeof(LIST_START);
+                pos = (buffer + max_len) - sizeof(LIST_START) - 1;
                 len = read_chunk(file, buffer, &pos, max_len-1);
                 if (!len) break;
             }
 
             state = widget_list;
-            pos = next + sizeof(LIST_START);
+            pos = next + sizeof(LIST_START) - 1;
             break;
 
         case widget_list:
@@ -224,7 +224,7 @@ int main(int argc, char *argv[])
 
             if (id && (end > id)) {
                 /* id found, use it */
-                id += sizeof(ID_START);
+                id += strlen(ID_START);
                 char *endofit = (strstr(id, ID_END) - 1);
 
                 /* trim it */
@@ -232,12 +232,12 @@ int main(int argc, char *argv[])
                 while (isspace(*endofit)) *endofit--=0;
 
                 /* store it */
-                strncpy(current->id, id, sizeof(current->id)-1);
+                strncpy(current->id, id, endofit-id+1);
             }
 
             if (name && (end > name)) {
                 /* name found, use it */
-                name += sizeof(NAME_START);
+                name += strlen(NAME_START);
                 char *endofit = (strstr(name, NAME_END) - 1);
 
                 /* trim it */
@@ -245,7 +245,7 @@ int main(int argc, char *argv[])
                 while (isspace(*endofit)) *endofit--=0;
 
                 /* store it */
-                strncpy(current->name, name, sizeof(current->name)-1);
+                strncpy(current->name, name, endofit-name+1);
             }
 
             state = widget_list;
